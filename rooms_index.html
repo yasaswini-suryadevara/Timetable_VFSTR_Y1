@@ -1,0 +1,294 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Rooms Index</title>
+
+<style>
+:root{
+  --bg:#f6f8fc;
+  --card:#ffffff;
+  --stroke:#e6eaf2;
+  --text:#1b2430;
+  --muted:#5b6b7a;
+  --subject:#1d4ed8;
+  --faculty:#0f766e;
+  --room:#7c3aed;
+  --section:#b91c1c;
+  --nonclass:#b45309;
+}
+
+*{box-sizing:border-box;}
+body{
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg, var(--bg), #f2f5fb);
+  color:var(--text);
+}
+.container{max-width:1200px;margin:0 auto;padding:18px 14px 30px;}
+a{color:var(--subject); text-decoration:none;}
+a:hover{text-decoration:underline;}
+.small{font-size:12px;color:var(--muted);}
+.badge{
+  display:inline-flex; align-items:center;
+  padding:2px 10px; border:1px solid var(--stroke); border-radius:999px;
+  background:#f7f8fb; font-size:12px; color:var(--muted);
+}
+.hr{height:0.1px;background:var(--stroke);margin:14px 0;}
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:4px;
+  box-shadow: 0 10px 5px rgba(16,24,40,.06);
+}
+
+.header{
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  background: linear-gradient(135deg, #ffffff, #f6f8ff);
+  border:1px solid var(--stroke);
+  box-shadow: 0 14px 30px rgba(16,24,40,.08);
+}
+.header-logo{
+  width:188px;height:44px;flex:0 0 188px;
+  border-radius:14px;
+  background:#ffffff;
+  border:1px solid var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.header-logo img{width:188px;height:44px;display:block;}
+.header-title{font-size:18px;font-weight:800;letter-spacing:.2px;margin:0;}
+.header-sub{margin:2px 0 0 0; color:var(--muted); font-size:13px;}
+.header-lines{margin-top:8px;}
+.header-lines div{color:var(--muted); font-size:12px; line-height:1.35;}
+
+.navlinks{margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;}
+.navbtn{
+  display:inline-flex; gap:3px; align-items:center;
+  padding:3px 3px;
+  border-radius:3px;
+  border:1px solid var(--stroke);
+  background:#ffffff;
+  color:var(--text);
+  cursor:pointer;
+}
+.navbtn:hover{background:#f7f8fb; text-decoration:none;}
+.dot{width:10px;height:10px;border-radius:999px;background:var(--subject);}
+
+.searchbar{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+.searchbar input{
+  flex:1; min-width:260px;
+  padding:10px 12px;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  font-size:13px;
+  outline:none;
+  background:#fff;
+}
+.searchbar input:focus{border-color:#cbd5e1;}
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border-radius:4px;
+  border:1px solid var(--stroke);
+  background:#fff;
+}
+table{
+  border-collapse:separate;
+  border-spacing:0;
+  width:100%;
+  min-width:360px;
+  table-layout:fixed;
+}
+th,td{
+  border-bottom:1px solid var(--stroke);
+  border-right:1px solid var(--stroke);
+  padding:2px;
+  vertical-align:top;
+  font-size:12px;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+tr:last-child td{border-bottom:none;}
+th:last-child, td:last-child{border-right:none;}
+th{background:#f3f6fb;font-weight:800; position:sticky; top:0; z-index:2;}
+.day{background:#fafbfe;font-weight:700; width:72px; position:sticky; left:0; z-index:1;}
+
+.subj{font-weight:800; color:var(--subject);}
+.faculty{color:var(--faculty); font-weight:700;}
+.room{color:var(--room); font-weight:700;}
+.section-label{color:var(--section); font-weight:700;}
+.nonclass{font-weight:500; color:var(--nonclass);}
+.free{color:#94a3b8;}
+
+.faculty-list-table{min-width:520px;}
+.faculty-list-table td{font-size:13px;}
+.faculty-list-table .emp{color:var(--muted); font-weight:700; width:110px; white-space:nowrap;}
+.faculty-list-table .name{color:var(--faculty); font-weight:800;}
+.faculty-list-table a{color:inherit;}
+
+/* Room index card grid */
+.room-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap:12px;
+  margin-top:12px;
+}
+.room-card{
+  background:#ffffff;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  padding:14px 16px;
+  box-shadow: 0 2px 8px rgba(16,24,40,.05);
+  transition: box-shadow .2s, transform .2s;
+}
+.room-card:hover{
+  box-shadow: 0 6px 20px rgba(16,24,40,.12);
+  transform: translateY(-2px);
+}
+.room-card a{
+  font-size:15px;
+  font-weight:800;
+  color:var(--room);
+  text-decoration:none;
+}
+.room-card a:hover{text-decoration:underline;}
+.room-card .room-meta{font-size:11px; color:var(--muted); margin-top:4px;}
+
+@media print{
+  body{background:#fff;}
+  .navlinks,.searchbar{display:none !important;}
+  .header{box-shadow:none;}
+  .card{box-shadow:none;}
+  .table-wrap{overflow:visible; border:1px solid #ccc;}
+  table{min-width:auto;}
+  th{position:static;}
+  .day{position:static;}
+}
+</style>
+
+
+<script>
+function attachListFilter(inputId, itemSelector){
+  const input = document.getElementById(inputId);
+  if(!input) return;
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    document.querySelectorAll(itemSelector).forEach(el => {
+      const text = (el.getAttribute("data-search") || el.textContent || "").toLowerCase();
+      el.style.display = text.includes(q) ? "" : "none";
+    });
+  });
+}
+</script>
+
+</head><body><div class='container'>
+
+<div class="header">
+  <div class="header-logo"><img src="file:///Users/bhanuprakash/Desktop/Timetable/VignanLogo.jpeg" alt="Logo"></div>
+  <div style="flex:1;">
+    <div class="header-title">Vignan&#x27;s Foundation for Science, Technology &amp; Research <span class="badge">Rooms Index</span></div>
+    <div class="header-sub">School of Applied Science &amp; Humanities 
+<div style="margin-top:12px; font-size:14px;">
+  <span style="color:#64748b; font-weight:600;">Author:-- </span>
+  <a href="https://dbhanuprakash233.github.io" target="_blank"
+     style="text-decoration:none; font-weight:800; color:#1d4ed8;">
+    Dr.BP
+  </a>
+</div>
+</div>
+    <div class="header-lines">
+      <div>A.Y. :2025-26    Sem: II I. B. Tech Time Table  w.e.f. 05.02.2026</div>
+    </div>
+  </div>
+</div>
+
+<div class='navlinks'>
+<a class='navbtn' href='./index.html'><span class='dot'></span>Home</a>
+<a class='navbtn' href='./sections_index.html'><span class='dot'></span>Sections</a>
+<a class='navbtn' href='./faculty_index.html'><span class='dot'></span>Faculty</a>
+</div>
+<div class='searchbar'><input id='roomSearch' placeholder='Search rooms (e.g., A101, Lab, 204...)'></div>
+<div class='hr'></div>
+<div class='card'>
+<h2>All Rooms <span class='badge'>74 rooms detected</span></h2>
+<div class='small'>Each room shows its complete weekly timetable — section, subject and faculty per slot.</div>
+</div>
+<div class='room-grid'>
+<div class='room-card roomItem' data-search='(a- block 3rd floor-vbtf-05)'><a href='rooms/room__A-_Block_3rd_floor-VBTF-05_.html'>(A- Block 3rd floor-VBTF-05)</a><div class='room-meta'>2 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a- block 5th floor-vbfftf-03)'><a href='rooms/room__A-_Block_5th_floor-VBFFTF-03_.html'>(A- Block 5th floor-VBFFTF-03)</a><div class='room-meta'>6 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a- block i floor vbff-01)'><a href='rooms/room__A-_Block_I_floor_VBFF-01_.html'>(A- Block I floor VBFF-01)</a><div class='room-meta'>16 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a- block iii floor--vbtf-05)'><a href='rooms/room__A-_Block_III_floor--VBTF-05_.html'>(A- Block III floor--VBTF-05)</a><div class='room-meta'>4 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a- block iii floor-vbtf-05 )'><a href='rooms/room__A-_Block_III_floor-VBTF-05_.html'>(A- Block III floor-VBTF-05 )</a><div class='room-meta'>12 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a- block iv floor-vbftf-02)'><a href='rooms/room__A-_Block_IV_floor-VBFTF-02_.html'>(A- Block IV floor-VBFTF-02)</a><div class='room-meta'>16 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a- block iv floor-vbftf-03)'><a href='rooms/room__A-_Block_IV_floor-VBFTF-03_.html'>(A- Block IV floor-VBFTF-03)</a><div class='room-meta'>20 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a- block v floor-vbfftf-03)'><a href='rooms/room__A-_Block_V_floor-VBFFTF-03_.html'>(A- Block V floor-VBFFTF-03)</a><div class='room-meta'>20 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a- block- iii- floor-vbtf-05)'><a href='rooms/room__A-_Block-_III-_Floor-VBTF-05_.html'>(A- Block- III- Floor-VBTF-05)</a><div class='room-meta'>2 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a-block 2nd floor-vbsf-01)'><a href='rooms/room__A-Block_2nd_Floor-VBSF-01_.html'>(A-Block 2nd Floor-VBSF-01)</a><div class='room-meta'>2 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(a-block ii floor  vbsf-01)'><a href='rooms/room__A-Block_II_Floor_VBSF-01_.html'>(A-Block II Floor  VBSF-01)</a><div class='room-meta'>26 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(h- block ii floor--vsf-16)'><a href='rooms/room__H-_Block_II_floor--VSF-16_.html'>(H- Block II floor--VSF-16)</a><div class='room-meta'>20 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(h-block-ground floor-vgf-03)'><a href='rooms/room__H-Block-Ground_Floor-VGF-03_.html'>(H-Block-Ground Floor-VGF-03)</a><div class='room-meta'>16 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(n-block 1st floor-nb107)'><a href='rooms/room__N-Block_1st_Floor-NB107_.html'>(N-Block 1st Floor-NB107)</a><div class='room-meta'>4 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(n-block-ii floor-nb219)'><a href='rooms/room__N-Block-II_Floor-NB219_.html'>(N-Block-II Floor-NB219)</a><div class='room-meta'>12 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p- block iii floor vptf-05&amp;06)'><a href='rooms/room__P-_Block_III_floor_VPTF-05_06_.html'>(P- Block III floor VPTF-05&amp;06)</a><div class='room-meta'>12 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p- block- ii- floor-vpsf-02)'><a href='rooms/room__P-_Block-_II-_Floor-VPSF-02_.html'>(P- Block- II- Floor-VPSF-02)</a><div class='room-meta'>10 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p- block- ii- floor-vpsf-07)'><a href='rooms/room__P-_Block-_II-_Floor-VPSF-07_.html'>(P- Block- II- Floor-VPSF-07)</a><div class='room-meta'>10 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p- block- iii- floor-vptf-01)'><a href='rooms/room__P-_Block-_III-_Floor-VPTF-01_.html'>(P- Block- III- Floor-VPTF-01)</a><div class='room-meta'>12 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p- block- iii- floor-vptf-03)'><a href='rooms/room__P-_Block-_III-_Floor-VPTF-03_.html'>(P- Block- III- Floor-VPTF-03)</a><div class='room-meta'>10 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p- block- iii- floor-vptf-04)'><a href='rooms/room__P-_Block-_III-_Floor-VPTF-04_.html'>(P- Block- III- Floor-VPTF-04)</a><div class='room-meta'>6 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p-block 2nd floor-vpsf-05)'><a href='rooms/room__P-Block_2nd_Floor-VPSF-05_.html'>(P-Block 2nd Floor-VPSF-05)</a><div class='room-meta'>36 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p-block 3nd floor-vptf-04)'><a href='rooms/room__P-Block_3nd_Floor-VPTF-04_.html'>(P-Block 3nd Floor-VPTF-04)</a><div class='room-meta'>16 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='(p-block 3rd floor vptf-07&amp;08)'><a href='rooms/room__P-Block_3rd_Floor_VPTF-07_08_.html'>(P-Block 3rd Floor VPTF-07&amp;08)</a><div class='room-meta'>24 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='a-block-4th floor-vbftf-02'><a href='rooms/room_A-Block-4th_Floor-VBFTF-02.html'>A-Block-4th Floor-VBFTF-02</a><div class='room-meta'>4 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='a-block-4th floor-vbftf-03'><a href='rooms/room_A-Block-4th_Floor-VBFTF-03.html'>A-Block-4th Floor-VBFTF-03</a><div class='room-meta'>2 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='h-block-2nd floor-vsf-11'><a href='rooms/room_H-Block-2nd_Floor-VSF-11.html'>H-Block-2nd Floor-VSF-11</a><div class='room-meta'>4 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='mobile'><a href='rooms/room_MOBILE.html'>MOBILE</a><div class='room-meta'>39 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='n-block -first -floor-nb106'><a href='rooms/room_N-Block_-First_-Floor-NB106.html'>N-Block -First -Floor-NB106</a><div class='room-meta'>36 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='n-block -first -floor-nb107'><a href='rooms/room_N-Block_-First_-Floor-NB107.html'>N-Block -First -Floor-NB107</a><div class='room-meta'>32 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='nb216'><a href='rooms/room_NB216.html'>NB216</a><div class='room-meta'>38 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='nb216(t)'><a href='rooms/room_NB216_T_.html'>NB216(T)</a><div class='room-meta'>1 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='nb217'><a href='rooms/room_NB217.html'>NB217</a><div class='room-meta'>41 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='nb218'><a href='rooms/room_NB218.html'>NB218</a><div class='room-meta'>37 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='nb518'><a href='rooms/room_NB518.html'>NB518</a><div class='room-meta'>32 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='sravanthi'><a href='rooms/room_Sravanthi.html'>Sravanthi</a><div class='room-meta'>32 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbff-02'><a href='rooms/room_VBFF-02.html'>VBFF-02</a><div class='room-meta'>43 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbff-03'><a href='rooms/room_VBFF-03.html'>VBFF-03</a><div class='room-meta'>42 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbff-04'><a href='rooms/room_VBFF-04.html'>VBFF-04</a><div class='room-meta'>48 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbff-05'><a href='rooms/room_VBFF-05.html'>VBFF-05</a><div class='room-meta'>36 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbfftf-01'><a href='rooms/room_VBFFTF-01.html'>VBFFTF-01</a><div class='room-meta'>44 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbfftf-02'><a href='rooms/room_VBFFTF-02.html'>VBFFTF-02</a><div class='room-meta'>42 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbfftf-03'><a href='rooms/room_VBFFTF-03.html'>VBFFTF-03</a><div class='room-meta'>13 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbftf-01'><a href='rooms/room_VBFTF-01.html'>VBFTF-01</a><div class='room-meta'>40 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbftf-02'><a href='rooms/room_VBFTF-02.html'>VBFTF-02</a><div class='room-meta'>15 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbftf-03'><a href='rooms/room_VBFTF-03.html'>VBFTF-03</a><div class='room-meta'>20 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbsf-02'><a href='rooms/room_VBSF-02.html'>VBSF-02</a><div class='room-meta'>40 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbsf-03'><a href='rooms/room_VBSF-03.html'>VBSF-03</a><div class='room-meta'>45 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbsf-04'><a href='rooms/room_VBSF-04.html'>VBSF-04</a><div class='room-meta'>47 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbsf-05'><a href='rooms/room_VBSF-05.html'>VBSF-05</a><div class='room-meta'>36 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbtf-01'><a href='rooms/room_VBTF-01.html'>VBTF-01</a><div class='room-meta'>43 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbtf-03'><a href='rooms/room_VBTF-03.html'>VBTF-03</a><div class='room-meta'>44 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbtf-04'><a href='rooms/room_VBTF-04.html'>VBTF-04</a><div class='room-meta'>30 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbtf-05'><a href='rooms/room_VBTF-05.html'>VBTF-05</a><div class='room-meta'>19 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbtf-06'><a href='rooms/room_VBTF-06.html'>VBTF-06</a><div class='room-meta'>46 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbtf-07'><a href='rooms/room_VBTF-07.html'>VBTF-07</a><div class='room-meta'>48 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vbtf-08'><a href='rooms/room_VBTF-08.html'>VBTF-08</a><div class='room-meta'>39 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vff-02'><a href='rooms/room_VFF-02.html'>VFF-02</a><div class='room-meta'>37 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vff-03'><a href='rooms/room_VFF-03.html'>VFF-03</a><div class='room-meta'>35 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vff-07'><a href='rooms/room_VFF-07.html'>VFF-07</a><div class='room-meta'>1 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vff-08'><a href='rooms/room_VFF-08.html'>VFF-08</a><div class='room-meta'>5 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vpsf-01'><a href='rooms/room_VPSF-01.html'>VPSF-01</a><div class='room-meta'>40 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vpsf-02'><a href='rooms/room_VPSF-02.html'>VPSF-02</a><div class='room-meta'>20 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vpsf-05'><a href='rooms/room_VPSF-05.html'>VPSF-05</a><div class='room-meta'>9 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vpsf-07'><a href='rooms/room_VPSF-07.html'>VPSF-07</a><div class='room-meta'>21 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vptf-01'><a href='rooms/room_VPTF-01.html'>VPTF-01</a><div class='room-meta'>21 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vptf-03'><a href='rooms/room_VPTF-03.html'>VPTF-03</a><div class='room-meta'>24 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vptf-04'><a href='rooms/room_VPTF-04.html'>VPTF-04</a><div class='room-meta'>9 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vptf-09'><a href='rooms/room_VPTF-09.html'>VPTF-09</a><div class='room-meta'>19 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vptf-10'><a href='rooms/room_VPTF-10.html'>VPTF-10</a><div class='room-meta'>41 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vptf-11'><a href='rooms/room_VPTF-11.html'>VPTF-11</a><div class='room-meta'>40 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vptf-12'><a href='rooms/room_VPTF-12.html'>VPTF-12</a><div class='room-meta'>41 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vptf09'><a href='rooms/room_VPTF09.html'>VPTF09</a><div class='room-meta'>22 class slot(s)</div></div>
+<div class='room-card roomItem' data-search='vsf-16'><a href='rooms/room_VSF-16.html'>VSF-16</a><div class='room-meta'>16 class slot(s)</div></div>
+</div>
+<script>attachListFilter('roomSearch', '.roomItem');</script>
+</div></body></html>

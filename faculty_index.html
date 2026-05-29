@@ -1,0 +1,637 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Faculty Index</title>
+
+<style>
+:root{
+  --bg:#f6f8fc;
+  --card:#ffffff;
+  --stroke:#e6eaf2;
+  --text:#1b2430;
+  --muted:#5b6b7a;
+  --subject:#1d4ed8;
+  --faculty:#0f766e;
+  --room:#7c3aed;
+  --section:#b91c1c;
+  --nonclass:#b45309;
+}
+
+*{box-sizing:border-box;}
+body{
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg, var(--bg), #f2f5fb);
+  color:var(--text);
+}
+.container{max-width:1200px;margin:0 auto;padding:18px 14px 30px;}
+a{color:var(--subject); text-decoration:none;}
+a:hover{text-decoration:underline;}
+.small{font-size:12px;color:var(--muted);}
+.badge{
+  display:inline-flex; align-items:center;
+  padding:2px 10px; border:1px solid var(--stroke); border-radius:999px;
+  background:#f7f8fb; font-size:12px; color:var(--muted);
+}
+.hr{height:0.1px;background:var(--stroke);margin:14px 0;}
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:4px;
+  box-shadow: 0 10px 5px rgba(16,24,40,.06);
+}
+
+.header{
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  background: linear-gradient(135deg, #ffffff, #f6f8ff);
+  border:1px solid var(--stroke);
+  box-shadow: 0 14px 30px rgba(16,24,40,.08);
+}
+.header-logo{
+  width:188px;height:44px;flex:0 0 188px;
+  border-radius:14px;
+  background:#ffffff;
+  border:1px solid var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.header-logo img{width:188px;height:44px;display:block;}
+.header-title{font-size:18px;font-weight:800;letter-spacing:.2px;margin:0;}
+.header-sub{margin:2px 0 0 0; color:var(--muted); font-size:13px;}
+.header-lines{margin-top:8px;}
+.header-lines div{color:var(--muted); font-size:12px; line-height:1.35;}
+
+.navlinks{margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;}
+.navbtn{
+  display:inline-flex; gap:3px; align-items:center;
+  padding:3px 3px;
+  border-radius:3px;
+  border:1px solid var(--stroke);
+  background:#ffffff;
+  color:var(--text);
+  cursor:pointer;
+}
+.navbtn:hover{background:#f7f8fb; text-decoration:none;}
+.dot{width:10px;height:10px;border-radius:999px;background:var(--subject);}
+
+.searchbar{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+.searchbar input{
+  flex:1; min-width:260px;
+  padding:10px 12px;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  font-size:13px;
+  outline:none;
+  background:#fff;
+}
+.searchbar input:focus{border-color:#cbd5e1;}
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border-radius:4px;
+  border:1px solid var(--stroke);
+  background:#fff;
+}
+table{
+  border-collapse:separate;
+  border-spacing:0;
+  width:100%;
+  min-width:360px;
+  table-layout:fixed;
+}
+th,td{
+  border-bottom:1px solid var(--stroke);
+  border-right:1px solid var(--stroke);
+  padding:2px;
+  vertical-align:top;
+  font-size:12px;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+tr:last-child td{border-bottom:none;}
+th:last-child, td:last-child{border-right:none;}
+th{background:#f3f6fb;font-weight:800; position:sticky; top:0; z-index:2;}
+.day{background:#fafbfe;font-weight:700; width:72px; position:sticky; left:0; z-index:1;}
+
+.subj{font-weight:800; color:var(--subject);}
+.faculty{color:var(--faculty); font-weight:700;}
+.room{color:var(--room); font-weight:700;}
+.section-label{color:var(--section); font-weight:700;}
+.nonclass{font-weight:500; color:var(--nonclass);}
+.free{color:#94a3b8;}
+
+.faculty-list-table{min-width:520px;}
+.faculty-list-table td{font-size:13px;}
+.faculty-list-table .emp{color:var(--muted); font-weight:700; width:110px; white-space:nowrap;}
+.faculty-list-table .name{color:var(--faculty); font-weight:800;}
+.faculty-list-table a{color:inherit;}
+
+/* Room index card grid */
+.room-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap:12px;
+  margin-top:12px;
+}
+.room-card{
+  background:#ffffff;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  padding:14px 16px;
+  box-shadow: 0 2px 8px rgba(16,24,40,.05);
+  transition: box-shadow .2s, transform .2s;
+}
+.room-card:hover{
+  box-shadow: 0 6px 20px rgba(16,24,40,.12);
+  transform: translateY(-2px);
+}
+.room-card a{
+  font-size:15px;
+  font-weight:800;
+  color:var(--room);
+  text-decoration:none;
+}
+.room-card a:hover{text-decoration:underline;}
+.room-card .room-meta{font-size:11px; color:var(--muted); margin-top:4px;}
+
+@media print{
+  body{background:#fff;}
+  .navlinks,.searchbar{display:none !important;}
+  .header{box-shadow:none;}
+  .card{box-shadow:none;}
+  .table-wrap{overflow:visible; border:1px solid #ccc;}
+  table{min-width:auto;}
+  th{position:static;}
+  .day{position:static;}
+}
+</style>
+
+
+<script>
+function attachListFilter(inputId, itemSelector){
+  const input = document.getElementById(inputId);
+  if(!input) return;
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    document.querySelectorAll(itemSelector).forEach(el => {
+      const text = (el.getAttribute("data-search") || el.textContent || "").toLowerCase();
+      el.style.display = text.includes(q) ? "" : "none";
+    });
+  });
+}
+</script>
+
+</head><body><div class='container'>
+
+<div class="header">
+  <div class="header-logo"><img src="file:///Users/bhanuprakash/Desktop/Timetable/VignanLogo.jpeg" alt="Logo"></div>
+  <div style="flex:1;">
+    <div class="header-title">Vignan&#x27;s Foundation for Science, Technology &amp; Research <span class="badge">Faculty Index</span></div>
+    <div class="header-sub">School of Applied Science &amp; Humanities 
+<div style="margin-top:12px; font-size:14px;">
+  <span style="color:#64748b; font-weight:600;">Author:-- </span>
+  <a href="https://dbhanuprakash233.github.io" target="_blank"
+     style="text-decoration:none; font-weight:800; color:#1d4ed8;">
+    Dr.BP
+  </a>
+</div>
+</div>
+    <div class="header-lines">
+      <div>A.Y. :2025-26    Sem: II I. B. Tech Time Table  w.e.f. 05.02.2026</div>
+    </div>
+  </div>
+</div>
+
+<div class='navlinks'>
+<a class='navbtn' href='./index.html'><span class='dot'></span>Home</a>
+<a class='navbtn' href='./sections_index.html'><span class='dot'></span>Sections</a>
+<a class='navbtn' href='./rooms_index.html'><span class='dot'></span>Rooms</a>
+</div>
+<div class='searchbar'><input id='facSearch' placeholder='Search by subject / faculty / emp id (e.g., LA, 1023, Ramesh)'></div>
+<div class='hr'></div>
+<div class='card'><h2>Faculty grouped by Subject Code</h2><div class='small'>Single-column list per subject. Sorted by Employee ID, then Name.</div></div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='bee'>
+<h3>BEE <span class='badge'>11 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='bee dr. k. balakrishna '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Balakrishna.html'>Dr. K. Balakrishna</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. k. chakravarthi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Chakravarthi.html'>Dr. K. Chakravarthi</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. m. bharathi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Bharathi.html'>Dr. M. Bharathi</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. m. subba rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Subba_rao.html'>Dr. M. Subba rao</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. m. umamaheswara rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Umamaheswara_Rao.html'>Dr. M. Umamaheswara Rao</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. p. lakshminarayana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Lakshminarayana.html'>Dr. P. Lakshminarayana</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. p. venkata subba rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Venkata_Subba_Rao.html'>Dr. P. Venkata Subba Rao</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. p.s.v. kishore '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_S_V_Kishore.html'>Dr. P.S.V. Kishore</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. parshuram singh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Parshuram_Singh.html'>Dr. Parshuram Singh</a></td></tr>
+<tr class='faculty-row' data-search='bee dr. s. yuvaraja '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_S_Yuvaraja.html'>Dr. S. Yuvaraja</a></td></tr>
+<tr class='faculty-row' data-search='bee mr. n. narasimha rao. ch. '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_N_Narasimha_Rao_Ch_.html'>Mr. N. Narasimha Rao. Ch.</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='ca&amp;ode'>
+<h3>CA&amp;ODE <span class='badge'>11 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. a. selvam '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_A_Selvam.html'>Dr. A. Selvam</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. arpita maji '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Arpita_Maji.html'>Dr. Arpita Maji</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. imtiyaz ahmad bhat '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Imtiyaz_Ahmad_Bhat.html'>Dr. Imtiyaz Ahmad Bhat</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. kamakhya paul '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Kamakhya_Paul.html'>Dr. Kamakhya Paul</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. n. santhosh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_N_Santhosh.html'>Dr. N. Santhosh</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. radha krishna kishore '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Radha_Krishna_Kishore.html'>Dr. Radha Krishna Kishore</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. s vinoth '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_S_Vinoth.html'>Dr. S Vinoth</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. s. rana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_S_Rana.html'>Dr. S. Rana</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. sumanjit sarkar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Sumanjit_Sarkar.html'>Dr. Sumanjit Sarkar</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode dr. yogendra singh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Yogendra_Singh.html'>Dr. Yogendra Singh</a></td></tr>
+<tr class='faculty-row' data-search='ca&amp;ode mrs. susmita saha sarkar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mrs_Susmita_Saha_Sarkar.html'>Mrs. Susmita Saha Sarkar</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='cal &amp; ode'>
+<h3>CAL &amp; ODE <span class='badge'>14 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. a. selvam '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_A_Selvam.html'>Dr. A. Selvam</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. b. triveni '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_B_Triveni.html'>Dr. B. Triveni</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. d. bhanu prakash '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_D_Bhanu_Prakash.html'>Dr. D. Bhanu Prakash</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. d. ravi kiran '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_D_Ravi_Kiran.html'>Dr. D. Ravi Kiran</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. g. srinivasa rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_G_Srinivasa_Rao.html'>Dr. G. Srinivasa Rao</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. k. divya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Divya.html'>Dr. K. Divya</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. m. v. subba rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_V_Subba_Rao.html'>Dr. M. V. Subba Rao</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. n. seshagiri rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_N_Seshagiri_Rao.html'>Dr. N. Seshagiri Rao</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. radha krishna kishore '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Radha_Krishna_Kishore.html'>Dr. Radha Krishna Kishore</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. s. vinoth '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_S_Vinoth.html'>Dr. S. Vinoth</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode dr. u. v. manoj kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_U_V_Manoj_Kumar.html'>Dr. U. V. Manoj Kumar</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode mr. mohamed zubair ahmed '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Mohamed_Zubair_Ahmed.html'>Mr. Mohamed Zubair Ahmed</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode mr. n. bujji '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_N_Bujji.html'>Mr. N. Bujji</a></td></tr>
+<tr class='faculty-row' data-search='cal &amp; ode ms. arifa '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Arifa.html'>Ms. Arifa</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='coi'>
+<h3>COI <span class='badge'>4 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='coi dr. k. n. murthy '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_N_Murthy.html'>Dr. K. N. Murthy</a></td></tr>
+<tr class='faculty-row' data-search='coi dr. prakash priyadarshi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Prakash_Priyadarshi.html'>Dr. Prakash Priyadarshi</a></td></tr>
+<tr class='faculty-row' data-search='coi dr. siva sankararao mallavarapu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Siva_Sankararao_Mallavarapu.html'>Dr. Siva Sankararao Mallavarapu</a></td></tr>
+<tr class='faculty-row' data-search='coi ms. sunayana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Sunayana.html'>Ms. Sunayana</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='cs'>
+<h3>CS <span class='badge'>21 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='cs dr. d. radha rani '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_D_Radha_Rani.html'>Dr. D. Radha Rani</a></td></tr>
+<tr class='faculty-row' data-search='cs dr. g. saubhagya ranjan biswal '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_G_Saubhagya_Ranjan_Biswal.html'>Dr. G. Saubhagya Ranjan Biswal</a></td></tr>
+<tr class='faculty-row' data-search='cs dr. m. vijai meyyappan '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Vijai_Meyyappan.html'>Dr. M. Vijai Meyyappan</a></td></tr>
+<tr class='faculty-row' data-search='cs dr. n. v. s. r. pavan kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_N_V_S_R_Pavan_Kumar.html'>Dr. N. V. S. R. Pavan Kumar</a></td></tr>
+<tr class='faculty-row' data-search='cs dr.md. oqail ahmad '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Md_Oqail_Ahmad.html'>Dr.Md. Oqail Ahmad</a></td></tr>
+<tr class='faculty-row' data-search='cs mr. ashok '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Ashok.html'>Mr. Ashok</a></td></tr>
+<tr class='faculty-row' data-search='cs mr. b. krishnakanth '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_B_Krishnakanth.html'>Mr. B. Krishnakanth</a></td></tr>
+<tr class='faculty-row' data-search='cs mr. francis xavier matlapudi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Francis_Xavier_Matlapudi.html'>Mr. Francis Xavier Matlapudi</a></td></tr>
+<tr class='faculty-row' data-search='cs mr. k. kiran kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_K_Kiran_Kumar.html'>Mr. K. Kiran Kumar</a></td></tr>
+<tr class='faculty-row' data-search='cs mr. n. murali krishna '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_N_Murali_Krishna.html'>Mr. N. Murali Krishna</a></td></tr>
+<tr class='faculty-row' data-search='cs mr. p. kiran kumar raja '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_P_Kiran_Kumar_Raja.html'>Mr. P. Kiran Kumar Raja</a></td></tr>
+<tr class='faculty-row' data-search='cs mr. shyam prasad '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Shyam_Prasad.html'>Mr. Shyam Prasad</a></td></tr>
+<tr class='faculty-row' data-search='cs mr. y. ashok '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Y_Ashok.html'>Mr. Y. Ashok</a></td></tr>
+<tr class='faculty-row' data-search='cs mrs. m. sumalatha '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mrs_M_Sumalatha.html'>Mrs. M. Sumalatha</a></td></tr>
+<tr class='faculty-row' data-search='cs mrs. n. anantha lakshmi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mrs_N_Anantha_Lakshmi.html'>Mrs. N. Anantha Lakshmi</a></td></tr>
+<tr class='faculty-row' data-search='cs mrs. p. s. v. v. samhitha '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mrs_P_S_V_V_Samhitha.html'>Mrs. P. S. V. V. Samhitha</a></td></tr>
+<tr class='faculty-row' data-search='cs ms. a. gopya sri '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_A_Gopya_Sri.html'>Ms. A. Gopya Sri</a></td></tr>
+<tr class='faculty-row' data-search='cs ms. a. ramya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_A_Ramya.html'>Ms. A. Ramya</a></td></tr>
+<tr class='faculty-row' data-search='cs ms. gopya sri '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Gopya_Sri.html'>Ms. Gopya Sri</a></td></tr>
+<tr class='faculty-row' data-search='cs ms. k. mercy bhikshavathi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_K_Mercy_Bhikshavathi.html'>Ms. K. Mercy Bhikshavathi</a></td></tr>
+<tr class='faculty-row' data-search='cs ms. n. archana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_N_Archana.html'>Ms. N. Archana</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='cal&amp;ode'>
+<h3>Cal&amp;ODE <span class='badge'>1 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='cal&amp;ode mr. a. nageswara rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_A_Nageswara_Rao.html'>Mr. A. Nageswara Rao</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='diy'>
+<h3>DIY <span class='badge'>10 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='diy dr. rajesh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Rajesh.html'>Dr. Rajesh</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. annadorai '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Annadorai.html'>Mr. Annadorai</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. b. rajasekhar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_B_Rajasekhar.html'>Mr. B. Rajasekhar</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. b. sunil kumar naik '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_B_Sunil_Kumar_Naik.html'>Mr. B. Sunil Kumar Naik</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. ch v s r satya prasad '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Ch_V_S_R_Satya_Prasad.html'>Mr. Ch V S R Satya Prasad</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. ch. pavan kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Ch_Pavan_Kumar.html'>Mr. Ch. Pavan Kumar</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. nabin kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Nabin_Kumar.html'>Mr. Nabin Kumar</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. p. bhanu sankar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_P_Bhanu_Sankar.html'>Mr. P. Bhanu Sankar</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. p. rakesh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_P_Rakesh.html'>Mr. P. Rakesh</a></td></tr>
+<tr class='faculty-row' data-search='diy mr. vikash kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Vikash_Kumar.html'>Mr. Vikash Kumar</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='ec'>
+<h3>EC <span class='badge'>14 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='ec dr. chandrasekhar kuppan '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Chandrasekhar_Kuppan.html'>Dr. Chandrasekhar Kuppan</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. jhili mishra '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Jhili_Mishra.html'>Dr. Jhili Mishra</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. jitendriya swain '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Jitendriya_Swain.html'>Dr. Jitendriya Swain</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. k. maria das '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Maria_Das.html'>Dr. K. Maria Das</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. koya prabhakara rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Koya_Prabhakara_Rao.html'>Dr. Koya Prabhakara Rao</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. m. sireesha '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Sireesha.html'>Dr. M. Sireesha</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. n. srinivasu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_N_Srinivasu.html'>Dr. N. Srinivasu</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. p. rajani '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Rajani.html'>Dr. P. Rajani</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. p.srinivasulu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Srinivasulu.html'>Dr. P.Srinivasulu</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. satya vijaya kumar  nune '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Satya_Vijaya_Kumar_Nune.html'>Dr. Satya Vijaya Kumar  Nune</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. srinivasa desikan '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Srinivasa_Desikan.html'>Dr. Srinivasa Desikan</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. sudip  mandal '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Sudip_Mandal.html'>Dr. Sudip  Mandal</a></td></tr>
+<tr class='faculty-row' data-search='ec dr. y.s.l.v. narayana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Y_S_L_V_Narayana.html'>Dr. Y.S.L.V. Narayana</a></td></tr>
+<tr class='faculty-row' data-search='ec dr.perumal devaraji '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Perumal_Devaraji.html'>Dr.Perumal Devaraji</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='eg'>
+<h3>EG <span class='badge'>16 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='eg dr. a. v. a. bharat kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_A_V_A_Bharat_Kumar.html'>Dr. A. V. A. Bharat Kumar</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. ajoy kumar nandy '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Ajoy_Kumar_Nandy.html'>Dr. Ajoy Kumar Nandy</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. d satyanarayana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_D_Satyanarayana.html'>Dr. D Satyanarayana</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. j. gopala rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_J_Gopala_Rao.html'>Dr. J. Gopala Rao</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. k. balakrishna reddy '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Balakrishna_Reddy.html'>Dr. K. Balakrishna Reddy</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. m. v. raju '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_V_Raju.html'>Dr. M. V. Raju</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. p. rakesh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Rakesh.html'>Dr. P. Rakesh</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. p. satish '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Satish.html'>Dr. P. Satish</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. rajesh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Rajesh.html'>Dr. Rajesh</a></td></tr>
+<tr class='faculty-row' data-search='eg dr. sanjay kumar guptha '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Sanjay_Kumar_Guptha.html'>Dr. Sanjay Kumar Guptha</a></td></tr>
+<tr class='faculty-row' data-search='eg dr.b.nageswara rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_B_Nageswara_Rao.html'>Dr.B.Nageswara Rao</a></td></tr>
+<tr class='faculty-row' data-search='eg mr. k. bala gopi krishna '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_K_Bala_Gopi_Krishna.html'>Mr. K. Bala Gopi Krishna</a></td></tr>
+<tr class='faculty-row' data-search='eg mr. m. anirudh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_M_Anirudh.html'>Mr. M. Anirudh</a></td></tr>
+<tr class='faculty-row' data-search='eg mr. selvamuttu kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Selvamuttu_Kumar.html'>Mr. Selvamuttu Kumar</a></td></tr>
+<tr class='faculty-row' data-search='eg mr. v. jayanth krishna '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_V_Jayanth_Krishna.html'>Mr. V. Jayanth Krishna</a></td></tr>
+<tr class='faculty-row' data-search='eg mr. vikash kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Vikash_Kumar.html'>Mr. Vikash Kumar</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='ep'>
+<h3>EP <span class='badge'>16 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='ep dr. ashutosh upadhyay '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Ashutosh_Upadhyay.html'>Dr. Ashutosh Upadhyay</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. b. nageshwara rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_B_Nageshwara_rao.html'>Dr. B. Nageshwara rao</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. e. nageshwara rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_E_Nageshwara_rao.html'>Dr. E. Nageshwara rao</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. habibuddin shaik '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Habibuddin_Shaik.html'>Dr. Habibuddin Shaik</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. j. n. kiran '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_J_N_Kiran.html'>Dr. J. N. Kiran</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. k. v. madhuri '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_V_Madhuri.html'>Dr. K. V. Madhuri</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. k. venkata prasad '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Venkata_Prasad.html'>Dr. K. Venkata Prasad</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. m. lakshmi narayana madhumohan '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Lakshmi_Narayana_Madhumohan.html'>Dr. M. Lakshmi Narayana Madhumohan</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. m. ramanajaneyulu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Ramanajaneyulu.html'>Dr. M. Ramanajaneyulu</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. m. sreenivasulu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Sreenivasulu.html'>Dr. M. Sreenivasulu</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. ramanjaneyulu mannam '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Ramanjaneyulu_Mannam.html'>Dr. Ramanjaneyulu Mannam</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. sreekar guddeti '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Sreekar_Guddeti.html'>Dr. Sreekar Guddeti</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. srinivasa rao pathipati '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Srinivasa_Rao_Pathipati.html'>Dr. Srinivasa Rao Pathipati</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. srinivasa reddy tippasani '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Srinivasa_Reddy_Tippasani.html'>Dr. Srinivasa Reddy Tippasani</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. tirupataiah chereddy '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Tirupataiah_Chereddy.html'>Dr. Tirupataiah Chereddy</a></td></tr>
+<tr class='faculty-row' data-search='ep dr. venkaiah malapati '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Venkaiah_Malapati.html'>Dr. Venkaiah Malapati</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='epcs'>
+<h3>EPCS <span class='badge'>28 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='epcs dr. d. sravana jyothi, dr. p. gouthami '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_D_Sravana_Jyothi_Dr_P_Gouthami.html'>Dr. D. Sravana Jyothi, Dr. P. Gouthami</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. dinesh, dr. u. sriranganath '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Dinesh_Dr_U_Sriranganath.html'>Dr. Dinesh, Dr. U. Sriranganath</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. g. mohana charyulu, ms. sahiti modugula '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_G_Mohana_Charyulu_Ms_Sahiti_Modugula.html'>Dr. G. Mohana Charyulu, Ms. Sahiti Modugula</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. g. nageswara rao, ms. k. vijaya kumari '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_G_Nageswara_Rao_Ms_K_Vijaya_Kumari.html'>Dr. G. Nageswara Rao, Ms. K. Vijaya Kumari</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. gurpreet singh saund, dr. k. srinivasa rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Gurpreet_Singh_Saund_Dr_K_Srinivasa_Rao.html'>Dr. Gurpreet Singh Saund, Dr. K. Srinivasa Rao</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. heisnam kenny devi, mr. k. sreeraghuram '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Heisnam_Kenny_Devi_Mr_K_Sreeraghuram.html'>Dr. Heisnam Kenny Devi, Mr. K. Sreeraghuram</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. k. naresh, dr. d. sravana jyothi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Naresh_Dr_D_Sravana_Jyothi.html'>Dr. K. Naresh, Dr. D. Sravana Jyothi</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. k. srinivasa rao, mr. v. rajendra babu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Srinivasa_Rao_Mr_V_Rajendra_Babu.html'>Dr. K. Srinivasa Rao, Mr. V. Rajendra Babu</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. k.v.b. ravindra babu, ms. m. vijaya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_V_B_Ravindra_Babu_Ms_M_Vijaya.html'>Dr. K.V.B. Ravindra Babu, Ms. M. Vijaya</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. m. abou raihan rinku, dr. reema chakrabarti '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Abou_Raihan_Rinku_Dr_Reema_Chakrabarti.html'>Dr. M. Abou Raihan Rinku, Dr. Reema Chakrabarti</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. m. lavanya, mr. v. ravi babu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Lavanya_Mr_V_Ravi_Babu.html'>Dr. M. Lavanya, Mr. V. Ravi Babu</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. p. gowthami, ms. d. punnamma '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Gowthami_Ms_D_Punnamma.html'>Dr. P. Gowthami, Ms. D. Punnamma</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. p. mahesh, mr. napolean joseph '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Mahesh_Mr_Napolean_Joseph.html'>Dr. P. Mahesh, Mr. Napolean Joseph</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. p. sasi ratnakar, mr. amjad khan a '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Sasi_Ratnakar_Mr_Amjad_Khan_A.html'>Dr. P. Sasi Ratnakar, Mr. Amjad Khan A</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. p. vijayababu, ms. k. kiranmai '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Vijayababu_Ms_K_Kiranmai.html'>Dr. P. Vijayababu, Ms. K. Kiranmai</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. p.a. kiranmai, dr. k. naresh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_A_Kiranmai_Dr_K_Naresh.html'>Dr. P.A. Kiranmai, Dr. K. Naresh</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. rahamat shaikh, dr. p.a. kiranmai '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Rahamat_Shaikh_Dr_P_A_Kiranmai.html'>Dr. Rahamat Shaikh, Dr. P.A. Kiranmai</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. reema chakrabarti, dr. m. abou raihan rinku '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Reema_Chakrabarti_Dr_M_Abou_Raihan_Rinku.html'>Dr. Reema Chakrabarti, Dr. M. Abou Raihan Rinku</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. sameeul haq nazki, mr. bibin k '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Sameeul_Haq_Nazki_Mr_Bibin_K.html'>Dr. Sameeul Haq Nazki, Mr. Bibin K</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. shah al mamun sarkar, ms. m. thambi rani '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Shah_Al_Mamun_Sarkar_Ms_M_Thambi_Rani.html'>Dr. Shah Al Mamun Sarkar, Ms. M. Thambi Rani</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. sri lakshmi manasa d, dr. gurpreet singh saund '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Sri_Lakshmi_Manasa_D_Dr_Gurpreet_Singh_Saund.html'>Dr. Sri Lakshmi Manasa D, Dr. Gurpreet Singh Saund</a></td></tr>
+<tr class='faculty-row' data-search='epcs dr. u. sriranganath, ms. p. ramya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_U_Sriranganath_Ms_P_Ramya.html'>Dr. U. Sriranganath, Ms. P. Ramya</a></td></tr>
+<tr class='faculty-row' data-search='epcs mr. bibin k, dr. shah al mamun sarkar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Bibin_K_Dr_Shah_Al_Mamun_Sarkar.html'>Mr. Bibin K, Dr. Shah Al Mamun Sarkar</a></td></tr>
+<tr class='faculty-row' data-search='epcs mr. k. sreeraghuram, dr. p. mahesh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_K_Sreeraghuram_Dr_P_Mahesh.html'>Mr. K. Sreeraghuram, Dr. P. Mahesh</a></td></tr>
+<tr class='faculty-row' data-search='epcs mr. nepolean joseph, dr. sameeul haq nazki '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Nepolean_Joseph_Dr_Sameeul_Haq_Nazki.html'>Mr. Nepolean Joseph, Dr. Sameeul Haq Nazki</a></td></tr>
+<tr class='faculty-row' data-search='epcs mr. syam prasad reddy, dr. rahamat shaikh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Syam_Prasad_Reddy_Dr_Rahamat_Shaikh.html'>Mr. Syam Prasad Reddy, Dr. Rahamat Shaikh</a></td></tr>
+<tr class='faculty-row' data-search='epcs mr. v. rajendra babu, mr. syam prasad reddy '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_V_Rajendra_Babu_Mr_Syam_Prasad_Reddy.html'>Mr. V. Rajendra Babu, Mr. Syam Prasad Reddy</a></td></tr>
+<tr class='faculty-row' data-search='epcs mr. v. ravi babu, mr. arshad c m '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_V_Ravi_Babu_Mr_Arshad_C_M.html'>Mr. V. Ravi Babu, Mr. Arshad C M</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='es'>
+<h3>ES <span class='badge'>10 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='es dr. arpita roy '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Arpita_Roy.html'>Dr. Arpita Roy</a></td></tr>
+<tr class='faculty-row' data-search='es dr. krishna yadav '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Krishna_Yadav.html'>Dr. Krishna Yadav</a></td></tr>
+<tr class='faculty-row' data-search='es dr. m.s.s.r. tejaswini '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_S_S_R_Tejaswini.html'>Dr. M.S.S.R. Tejaswini</a></td></tr>
+<tr class='faculty-row' data-search='es dr. p.srinivasulu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Srinivasulu.html'>Dr. P.Srinivasulu</a></td></tr>
+<tr class='faculty-row' data-search='es dr. subhalakshmi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Subhalakshmi.html'>Dr. Subhalakshmi</a></td></tr>
+<tr class='faculty-row' data-search='es dr.krishandevi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Krishandevi.html'>Dr.Krishandevi</a></td></tr>
+<tr class='faculty-row' data-search='es dr.m.v.k. srivani '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_V_K_Srivani.html'>Dr.M.V.K. Srivani</a></td></tr>
+<tr class='faculty-row' data-search='es mr. r.v.ramana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_R_V_Ramana.html'>Mr. R.V.Ramana</a></td></tr>
+<tr class='faculty-row' data-search='es mr. sattam mandal '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Sattam_Mandal.html'>Mr. Sattam Mandal</a></td></tr>
+<tr class='faculty-row' data-search='es ms. rigdha sarkar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Rigdha_Sarkar.html'>Ms. Rigdha Sarkar</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='fee'>
+<h3>FEE <span class='badge'>3 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='fee dr. a.r. vijay babu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_A_R_Vijay_Babu.html'>Dr. A.R. Vijay Babu</a></td></tr>
+<tr class='faculty-row' data-search='fee dr. d. anil kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_D_Anil_Kumar.html'>Dr. D. Anil Kumar</a></td></tr>
+<tr class='faculty-row' data-search='fee dr. k. mercy rosalina '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Mercy_Rosalina.html'>Dr. K. Mercy Rosalina</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='ich'>
+<h3>ICH <span class='badge'>7 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='ich dr. chitran d '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Chitran_D.html'>Dr. Chitran D</a></td></tr>
+<tr class='faculty-row' data-search='ich indian culture and heritage(ich) '><td class='emp'></td><td class='name'><a href='faculty/faculty_Indian_Culture_And_Heritage_ICH_.html'>Indian Culture And Heritage(ICH)</a></td></tr>
+<tr class='faculty-row' data-search='ich mr. akhil a r '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Akhil_A_R.html'>Mr. Akhil A R</a></td></tr>
+<tr class='faculty-row' data-search='ich ms. shareena jasmin '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Shareena_Jasmin.html'>Ms. Shareena Jasmin</a></td></tr>
+<tr class='faculty-row' data-search='ich ms. shivani '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Shivani.html'>Ms. Shivani</a></td></tr>
+<tr class='faculty-row' data-search='ich ms. stavamagna '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Stavamagna.html'>Ms. Stavamagna</a></td></tr>
+<tr class='faculty-row' data-search='ich ⁠mr. ch. praveen kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty__Mr_Ch_Praveen_Kumar.html'>⁠Mr. Ch. Praveen Kumar</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='iks'>
+<h3>IKS <span class='badge'>6 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='iks dr. nazma '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Nazma.html'>Dr. Nazma</a></td></tr>
+<tr class='faculty-row' data-search='iks dr. vijaykumar d '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Vijaykumar_D.html'>Dr. Vijaykumar D</a></td></tr>
+<tr class='faculty-row' data-search='iks mr. akhil a r '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Akhil_A_R.html'>Mr. Akhil A R</a></td></tr>
+<tr class='faculty-row' data-search='iks mr. cheepu ravi kiran '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Cheepu_Ravi_Kiran.html'>Mr. Cheepu Ravi Kiran</a></td></tr>
+<tr class='faculty-row' data-search='iks ⁠dr. mohammed shameem '><td class='emp'></td><td class='name'><a href='faculty/faculty__Dr_Mohammed_Shameem.html'>⁠Dr. Mohammed Shameem</a></td></tr>
+<tr class='faculty-row' data-search='iks ⁠⁠dr. ramesh babu para '><td class='emp'></td><td class='name'><a href='faculty/faculty__Dr_Ramesh_Babu_Para.html'>⁠⁠Dr. Ramesh Babu Para</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='ls'>
+<h3>LS <span class='badge'>2 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='ls life skills(ls) '><td class='emp'></td><td class='name'><a href='faculty/faculty_Life_Skills_LS_.html'>Life Skills(LS)</a></td></tr>
+<tr class='faculty-row' data-search='ls team students affair '><td class='emp'></td><td class='name'><a href='faculty/faculty_Team_Students_affair.html'>Team Students affair</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='m&amp;ode'>
+<h3>M&amp;ODE <span class='badge'>3 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='m&amp;ode dr m. padma devi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Padma_Devi.html'>Dr M. Padma Devi</a></td></tr>
+<tr class='faculty-row' data-search='m&amp;ode dr. imtiyaz ahmad bhat '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Imtiyaz_Ahmad_Bhat.html'>Dr. Imtiyaz Ahmad Bhat</a></td></tr>
+<tr class='faculty-row' data-search='m&amp;ode ms. p. sowjanya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_P_Sowjanya.html'>Ms. P. Sowjanya</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='ms'>
+<h3>MS <span class='badge'>18 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='ms dr t priyanka '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_T_Priyanka.html'>Dr T Priyanka</a></td></tr>
+<tr class='faculty-row' data-search='ms dr t subba rayudu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_T_Subba_Rayudu.html'>Dr T Subba Rayudu</a></td></tr>
+<tr class='faculty-row' data-search='ms dr. a. sai mani deep '><td class='emp'></td><td class='name'><a href='faculty/faculty_DR_A_SAI_MANI_DEEP.html'>DR. A. SAI MANI DEEP</a></td></tr>
+<tr class='faculty-row' data-search='ms dr. ch v siva varma '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Ch_V_Siva_Varma.html'>Dr. Ch V Siva Varma</a></td></tr>
+<tr class='faculty-row' data-search='ms dr. k. s nageswara rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_DR_K_S_NAGESWARA_RAO.html'>DR. K. S NAGESWARA RAO</a></td></tr>
+<tr class='faculty-row' data-search='ms dr. y. srinivasa rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_DR_Y_SRINIVASA_RAO.html'>DR. Y. SRINIVASA RAO</a></td></tr>
+<tr class='faculty-row' data-search='ms mr d yedukondalu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_D_Yedukondalu.html'>Mr D Yedukondalu</a></td></tr>
+<tr class='faculty-row' data-search='ms mr l ganesh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_L_Ganesh.html'>Mr L Ganesh</a></td></tr>
+<tr class='faculty-row' data-search='ms mr n mutyalu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_N_Mutyalu.html'>Mr N Mutyalu</a></td></tr>
+<tr class='faculty-row' data-search='ms mr u chandra mouli '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_U_Chandra_Mouli.html'>Mr U Chandra Mouli</a></td></tr>
+<tr class='faculty-row' data-search='ms mr. m. s. kishan varma '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_M_S_Kishan_Varma.html'>Mr. M. S. Kishan Varma</a></td></tr>
+<tr class='faculty-row' data-search='ms mr.m. ramu '><td class='emp'></td><td class='name'><a href='faculty/faculty_MR_M_RAMU.html'>MR.M. RAMU</a></td></tr>
+<tr class='faculty-row' data-search='ms mrs m srikanthi kumari '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mrs_M_Srikanthi_Kumari.html'>Mrs M Srikanthi Kumari</a></td></tr>
+<tr class='faculty-row' data-search='ms ms g iswarya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_G_Iswarya.html'>Ms G Iswarya</a></td></tr>
+<tr class='faculty-row' data-search='ms ms k anjana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_K_Anjana.html'>Ms K Anjana</a></td></tr>
+<tr class='faculty-row' data-search='ms ms karuna sindhuja '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Karuna_Sindhuja.html'>Ms Karuna Sindhuja</a></td></tr>
+<tr class='faculty-row' data-search='ms ms p lakshmi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_P_Lakshmi.html'>Ms P Lakshmi</a></td></tr>
+<tr class='faculty-row' data-search='ms ms v naga lakshmi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_V_Naga_Lakshmi.html'>Ms V Naga Lakshmi</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='oc'>
+<h3>OC <span class='badge'>4 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='oc dr. anandroop goswami '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Anandroop_Goswami.html'>Dr. Anandroop Goswami</a></td></tr>
+<tr class='faculty-row' data-search='oc dr. k. ravi kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Ravi_Kumar.html'>Dr. K. Ravi Kumar</a></td></tr>
+<tr class='faculty-row' data-search='oc dr. kiran sagar unikela '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Kiran_Sagar_Unikela.html'>Dr. Kiran Sagar Unikela</a></td></tr>
+<tr class='faculty-row' data-search='oc dr. satya vijaya kumar  nune '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Satya_Vijaya_Kumar_Nune.html'>Dr. Satya Vijaya Kumar  Nune</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='pstp'>
+<h3>PSTP <span class='badge'>27 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='pstp dr. a v nageswara rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_A_V_Nageswara_Rao.html'>Dr. A V Nageswara Rao</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. a. subramanyam '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_A_Subramanyam.html'>Dr. A. Subramanyam</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. c. sateesh kumar reddy '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_C_Sateesh_Kumar_Reddy.html'>Dr. C. Sateesh Kumar Reddy</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. k. rachananjali '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Rachananjali.html'>Dr. K. Rachananjali</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. m. vijai meyyappan '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Vijai_Meyyappan.html'>Dr. M. Vijai Meyyappan</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. mastan sharif '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Mastan_Sharif.html'>Dr. Mastan Sharif</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. n. shiva kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_N_Shiva_Kumar.html'>Dr. N. Shiva Kumar</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. n. v. r. kikram g '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_N_V_R_Kikram_G.html'>Dr. N. V. R. Kikram G</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. n. v. s. r. pavan kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_N_V_S_R_Pavan_Kumar.html'>Dr. N. V. S. R. Pavan Kumar</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. rambabu kusuma '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Rambabu_Kusuma.html'>Dr. Rambabu Kusuma</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr. saubhagya ranjan biswal '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Saubhagya_Ranjan_Biswal.html'>Dr. Saubhagya Ranjan Biswal</a></td></tr>
+<tr class='faculty-row' data-search='pstp dr.md. oqail ahmad '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Md_Oqail_Ahmad.html'>Dr.Md. Oqail Ahmad</a></td></tr>
+<tr class='faculty-row' data-search='pstp mr. b. krishnakanth '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_B_Krishnakanth.html'>Mr. B. Krishnakanth</a></td></tr>
+<tr class='faculty-row' data-search='pstp mr. b. naga sudheer '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_B_Naga_Sudheer.html'>Mr. B. Naga Sudheer</a></td></tr>
+<tr class='faculty-row' data-search='pstp mr. k. kiran kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_K_Kiran_Kumar.html'>Mr. K. Kiran Kumar</a></td></tr>
+<tr class='faculty-row' data-search='pstp mr. p. kiran kumar raja '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_P_Kiran_Kumar_Raja.html'>Mr. P. Kiran Kumar Raja</a></td></tr>
+<tr class='faculty-row' data-search='pstp mr. r. vamsi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_R_Vamsi.html'>Mr. R. Vamsi</a></td></tr>
+<tr class='faculty-row' data-search='pstp mr. s. jaya sankar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_S_Jaya_Sankar.html'>Mr. S. Jaya Sankar</a></td></tr>
+<tr class='faculty-row' data-search='pstp mrs. m. sumalatha '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mrs_M_Sumalatha.html'>Mrs. M. Sumalatha</a></td></tr>
+<tr class='faculty-row' data-search='pstp mrs. p. s. v. v. samhitha '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mrs_P_S_V_V_Samhitha.html'>Mrs. P. S. V. V. Samhitha</a></td></tr>
+<tr class='faculty-row' data-search='pstp mrs. sowjanya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mrs_Sowjanya.html'>Mrs. Sowjanya</a></td></tr>
+<tr class='faculty-row' data-search='pstp ms. a. gopya sri '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_A_Gopya_Sri.html'>Ms. A. Gopya Sri</a></td></tr>
+<tr class='faculty-row' data-search='pstp ms. g. archana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_G_Archana.html'>Ms. G. Archana</a></td></tr>
+<tr class='faculty-row' data-search='pstp ms. k. naga lavanya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_K_Naga_Lavanya.html'>Ms. K. Naga Lavanya</a></td></tr>
+<tr class='faculty-row' data-search='pstp ms. krishna veni '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Krishna_Veni.html'>Ms. Krishna Veni</a></td></tr>
+<tr class='faculty-row' data-search='pstp ms. n. archana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_N_Archana.html'>Ms. N. Archana</a></td></tr>
+<tr class='faculty-row' data-search='pstp ms. p. s. v. v. samhitha '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_P_S_V_V_Samhitha.html'>Ms. P. S. V. V. Samhitha</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='se&amp;gs'>
+<h3>SE&amp;GS <span class='badge'>8 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='se&amp;gs dr. d. adam '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_D_Adam.html'>Dr. D. Adam</a></td></tr>
+<tr class='faculty-row' data-search='se&amp;gs ms. bontha harani '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Bontha_Harani.html'>Ms. Bontha Harani</a></td></tr>
+<tr class='faculty-row' data-search='se&amp;gs ms. chikkala meghana '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Chikkala_Meghana.html'>Ms. Chikkala Meghana</a></td></tr>
+<tr class='faculty-row' data-search='se&amp;gs ms. gampa haveela '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Gampa_Haveela.html'>Ms. Gampa Haveela</a></td></tr>
+<tr class='faculty-row' data-search='se&amp;gs ms. shivani '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Shivani.html'>Ms. Shivani</a></td></tr>
+<tr class='faculty-row' data-search='se&amp;gs ms. stavamagna '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Stavamagna.html'>Ms. Stavamagna</a></td></tr>
+<tr class='faculty-row' data-search='se&amp;gs ⁠dr. muhammed sihas '><td class='emp'></td><td class='name'><a href='faculty/faculty__Dr_Muhammed_Sihas.html'>⁠Dr. Muhammed Sihas</a></td></tr>
+<tr class='faculty-row' data-search='se&amp;gs ⁠ms. jaya sri '><td class='emp'></td><td class='name'><a href='faculty/faculty__Ms_Jaya_Sri.html'>⁠Ms. Jaya Sri</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='su&amp;gs'>
+<h3>SU&amp;GS <span class='badge'>1 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='su&amp;gs ms. jaya sri '><td class='emp'></td><td class='name'><a href='faculty/faculty_Ms_Jaya_Sri.html'>Ms. Jaya Sri</a></td></tr>
+</table></div></div>
+</div>
+<div class='subjectBlock'>
+<div class='card' style='margin-top:12px;' data-search='tec'>
+<h3>TEC <span class='badge'>26 faculty</span></h3>
+<div class='table-wrap'><table class='faculty-list-table'>
+<tr><th style='width:120px;'>Emp ID</th><th>Faculty</th></tr>
+<tr class='faculty-row' data-search='tec dr. d. sravana jyothi, mr. bibin k '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_D_Sravana_Jyothi_Mr_Bibin_K.html'>Dr. D. Sravana Jyothi, Mr. Bibin K</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. dinesh, dr. reema chakrabarti '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Dinesh_Dr_Reema_Chakrabarti.html'>Dr. Dinesh, Dr. Reema Chakrabarti</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. g. nageswara rao, dr. heisnam kenny devi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_G_Nageswara_Rao_Dr_Heisnam_Kenny_Devi.html'>Dr. G. Nageswara Rao, Dr. Heisnam Kenny Devi</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. heisnam kenny devi, dr. k. srinivasa rao '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Heisnam_Kenny_Devi_Dr_K_Srinivasa_Rao.html'>Dr. Heisnam Kenny Devi, Dr. K. Srinivasa Rao</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. k. naresh, ms. m. vijaya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Naresh_Ms_M_Vijaya.html'>Dr. K. Naresh, Ms. M. Vijaya</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. k. srinivasa rao, mr. r. anil kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_Srinivasa_Rao_Mr_R_Anil_Kumar.html'>Dr. K. Srinivasa Rao, Mr. R. Anil Kumar</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. k.v.b. ravindra babu, ms. p. ramya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_K_V_B_Ravindra_Babu_Ms_P_Ramya.html'>Dr. K.V.B. Ravindra Babu, Ms. P. Ramya</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. m. abou raihan rinku, dr. m. lavanya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Abou_Raihan_Rinku_Dr_M_Lavanya.html'>Dr. M. Abou Raihan Rinku, Dr. M. Lavanya</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. m. lavanya, dr. sri lakshmi manasa d '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_M_Lavanya_Dr_Sri_Lakshmi_Manasa_D.html'>Dr. M. Lavanya, Dr. Sri Lakshmi Manasa D</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. p. gowthami, dr. vinod kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Gowthami_Dr_Vinod_Kumar.html'>Dr. P. Gowthami, Dr. Vinod Kumar</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. p. mahesh, dr. d. sravana jyothi '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Mahesh_Dr_D_Sravana_Jyothi.html'>Dr. P. Mahesh, Dr. D. Sravana Jyothi</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. p. sasi ratnakar, mr. syam prasad reddy '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Sasi_Ratnakar_Mr_Syam_Prasad_Reddy.html'>Dr. P. Sasi Ratnakar, Mr. Syam Prasad Reddy</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. p. vijayababu, ms. k. kiranmai '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_Vijayababu_Ms_K_Kiranmai.html'>Dr. P. Vijayababu, Ms. K. Kiranmai</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. p.a. kiranmai, mr. v. ravi babu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_P_A_Kiranmai_Mr_V_Ravi_Babu.html'>Dr. P.A. Kiranmai, Mr. V. Ravi Babu</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. rahamat shaikh, dr. vinod kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Rahamat_Shaikh_Dr_Vinod_Kumar.html'>Dr. Rahamat Shaikh, Dr. Vinod Kumar</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. reema chakrabarti, dr. p. gouthami '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Reema_Chakrabarti_Dr_P_Gouthami.html'>Dr. Reema Chakrabarti, Dr. P. Gouthami</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. shah al mamun sarkar, dr. p.a. kiranmai '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Shah_Al_Mamun_Sarkar_Dr_P_A_Kiranmai.html'>Dr. Shah Al Mamun Sarkar, Dr. P.A. Kiranmai</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. sri lakshmi manasa d, mr. g. babu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Sri_Lakshmi_Manasa_D_Mr_G_Babu.html'>Dr. Sri Lakshmi Manasa D, Mr. G. Babu</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. u. sriranganath, mr. v. rajendra babu '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_U_Sriranganath_Mr_V_Rajendra_Babu.html'>Dr. U. Sriranganath, Mr. V. Rajendra Babu</a></td></tr>
+<tr class='faculty-row' data-search='tec dr. vinod kumar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Dr_Vinod_Kumar.html'>Dr. Vinod Kumar</a></td></tr>
+<tr class='faculty-row' data-search='tec mr. bibin k, dr. p. sasi ratnakar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Bibin_K_Dr_P_Sasi_Ratnakar.html'>Mr. Bibin K, Dr. P. Sasi Ratnakar</a></td></tr>
+<tr class='faculty-row' data-search='tec mr. k. sreeraghuram, dr. sameeul haq nazki '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_K_Sreeraghuram_Dr_Sameeul_Haq_Nazki.html'>Mr. K. Sreeraghuram, Dr. Sameeul Haq Nazki</a></td></tr>
+<tr class='faculty-row' data-search='tec mr. napolean joseph, dr. k. naresh '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Napolean_Joseph_Dr_K_Naresh.html'>Mr. Napolean Joseph, Dr. K. Naresh</a></td></tr>
+<tr class='faculty-row' data-search='tec mr. syam prasad reddy, dr. shah al mamun sarkar '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_Syam_Prasad_Reddy_Dr_Shah_Al_Mamun_Sarkar.html'>Mr. Syam Prasad Reddy, Dr. Shah Al Mamun Sarkar</a></td></tr>
+<tr class='faculty-row' data-search='tec mr. v. rajendra babu, dr. m. lavanya '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_V_Rajendra_Babu_Dr_M_Lavanya.html'>Mr. V. Rajendra Babu, Dr. M. Lavanya</a></td></tr>
+<tr class='faculty-row' data-search='tec mr. v. ravi babu, dr. gurpreet singh saund '><td class='emp'></td><td class='name'><a href='faculty/faculty_Mr_V_Ravi_Babu_Dr_Gurpreet_Singh_Saund.html'>Mr. V. Ravi Babu, Dr. Gurpreet Singh Saund</a></td></tr>
+</table></div></div>
+</div>
+<script>attachListFilter('facSearch', '.subjectBlock, .faculty-row');</script>
+</div></body></html>

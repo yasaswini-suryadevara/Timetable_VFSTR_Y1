@@ -1,0 +1,270 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Sections Index</title>
+
+<style>
+:root{
+  --bg:#f6f8fc;
+  --card:#ffffff;
+  --stroke:#e6eaf2;
+  --text:#1b2430;
+  --muted:#5b6b7a;
+  --subject:#1d4ed8;
+  --faculty:#0f766e;
+  --room:#7c3aed;
+  --section:#b91c1c;
+  --nonclass:#b45309;
+}
+
+*{box-sizing:border-box;}
+body{
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg, var(--bg), #f2f5fb);
+  color:var(--text);
+}
+.container{max-width:1200px;margin:0 auto;padding:18px 14px 30px;}
+a{color:var(--subject); text-decoration:none;}
+a:hover{text-decoration:underline;}
+.small{font-size:12px;color:var(--muted);}
+.badge{
+  display:inline-flex; align-items:center;
+  padding:2px 10px; border:1px solid var(--stroke); border-radius:999px;
+  background:#f7f8fb; font-size:12px; color:var(--muted);
+}
+.hr{height:0.1px;background:var(--stroke);margin:14px 0;}
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:4px;
+  box-shadow: 0 10px 5px rgba(16,24,40,.06);
+}
+
+.header{
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  background: linear-gradient(135deg, #ffffff, #f6f8ff);
+  border:1px solid var(--stroke);
+  box-shadow: 0 14px 30px rgba(16,24,40,.08);
+}
+.header-logo{
+  width:188px;height:44px;flex:0 0 188px;
+  border-radius:14px;
+  background:#ffffff;
+  border:1px solid var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.header-logo img{width:188px;height:44px;display:block;}
+.header-title{font-size:18px;font-weight:800;letter-spacing:.2px;margin:0;}
+.header-sub{margin:2px 0 0 0; color:var(--muted); font-size:13px;}
+.header-lines{margin-top:8px;}
+.header-lines div{color:var(--muted); font-size:12px; line-height:1.35;}
+
+.navlinks{margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;}
+.navbtn{
+  display:inline-flex; gap:3px; align-items:center;
+  padding:3px 3px;
+  border-radius:3px;
+  border:1px solid var(--stroke);
+  background:#ffffff;
+  color:var(--text);
+  cursor:pointer;
+}
+.navbtn:hover{background:#f7f8fb; text-decoration:none;}
+.dot{width:10px;height:10px;border-radius:999px;background:var(--subject);}
+
+.searchbar{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+.searchbar input{
+  flex:1; min-width:260px;
+  padding:10px 12px;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  font-size:13px;
+  outline:none;
+  background:#fff;
+}
+.searchbar input:focus{border-color:#cbd5e1;}
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border-radius:4px;
+  border:1px solid var(--stroke);
+  background:#fff;
+}
+table{
+  border-collapse:separate;
+  border-spacing:0;
+  width:100%;
+  min-width:360px;
+  table-layout:fixed;
+}
+th,td{
+  border-bottom:1px solid var(--stroke);
+  border-right:1px solid var(--stroke);
+  padding:2px;
+  vertical-align:top;
+  font-size:12px;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+tr:last-child td{border-bottom:none;}
+th:last-child, td:last-child{border-right:none;}
+th{background:#f3f6fb;font-weight:800; position:sticky; top:0; z-index:2;}
+.day{background:#fafbfe;font-weight:700; width:72px; position:sticky; left:0; z-index:1;}
+
+.subj{font-weight:800; color:var(--subject);}
+.faculty{color:var(--faculty); font-weight:700;}
+.room{color:var(--room); font-weight:700;}
+.section-label{color:var(--section); font-weight:700;}
+.nonclass{font-weight:500; color:var(--nonclass);}
+.free{color:#94a3b8;}
+
+.faculty-list-table{min-width:520px;}
+.faculty-list-table td{font-size:13px;}
+.faculty-list-table .emp{color:var(--muted); font-weight:700; width:110px; white-space:nowrap;}
+.faculty-list-table .name{color:var(--faculty); font-weight:800;}
+.faculty-list-table a{color:inherit;}
+
+/* Room index card grid */
+.room-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap:12px;
+  margin-top:12px;
+}
+.room-card{
+  background:#ffffff;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  padding:14px 16px;
+  box-shadow: 0 2px 8px rgba(16,24,40,.05);
+  transition: box-shadow .2s, transform .2s;
+}
+.room-card:hover{
+  box-shadow: 0 6px 20px rgba(16,24,40,.12);
+  transform: translateY(-2px);
+}
+.room-card a{
+  font-size:15px;
+  font-weight:800;
+  color:var(--room);
+  text-decoration:none;
+}
+.room-card a:hover{text-decoration:underline;}
+.room-card .room-meta{font-size:11px; color:var(--muted); margin-top:4px;}
+
+@media print{
+  body{background:#fff;}
+  .navlinks,.searchbar{display:none !important;}
+  .header{box-shadow:none;}
+  .card{box-shadow:none;}
+  .table-wrap{overflow:visible; border:1px solid #ccc;}
+  table{min-width:auto;}
+  th{position:static;}
+  .day{position:static;}
+}
+</style>
+
+
+<script>
+function attachListFilter(inputId, itemSelector){
+  const input = document.getElementById(inputId);
+  if(!input) return;
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    document.querySelectorAll(itemSelector).forEach(el => {
+      const text = (el.getAttribute("data-search") || el.textContent || "").toLowerCase();
+      el.style.display = text.includes(q) ? "" : "none";
+    });
+  });
+}
+</script>
+
+</head><body><div class='container'>
+
+<div class="header">
+  <div class="header-logo"><img src="file:///Users/bhanuprakash/Desktop/Timetable/VignanLogo.jpeg" alt="Logo"></div>
+  <div style="flex:1;">
+    <div class="header-title">Vignan&#x27;s Foundation for Science, Technology &amp; Research <span class="badge">Sections Index</span></div>
+    <div class="header-sub">School of Applied Science &amp; Humanities 
+<div style="margin-top:12px; font-size:14px;">
+  <span style="color:#64748b; font-weight:600;">Author:-- </span>
+  <a href="https://dbhanuprakash233.github.io" target="_blank"
+     style="text-decoration:none; font-weight:800; color:#1d4ed8;">
+    Dr.BP
+  </a>
+</div>
+</div>
+    <div class="header-lines">
+      <div>A.Y. :2025-26    Sem: II I. B. Tech Time Table  w.e.f. 05.02.2026</div>
+    </div>
+  </div>
+</div>
+
+<div class='navlinks'>
+<a class='navbtn' href='./index.html'><span class='dot'></span>Home</a>
+<a class='navbtn' href='./faculty_index.html'><span class='dot'></span>Faculty</a>
+<a class='navbtn' href='./rooms_index.html'><span class='dot'></span>Rooms</a>
+</div>
+<div class='searchbar'><input id='secSearch' placeholder='Search sections (e.g., 1, SEC-01, stream...)'></div>
+<div class='hr'></div>
+<div class='card'><h2>All Sections</h2><ul>
+<li class='secItem' data-search='sec-01'><a href='sections/section_SEC-01.html'>SEC-01</a></li>
+<li class='secItem' data-search='sec-02'><a href='sections/section_SEC-02.html'>SEC-02</a></li>
+<li class='secItem' data-search='sec-03'><a href='sections/section_SEC-03.html'>SEC-03</a></li>
+<li class='secItem' data-search='sec-04'><a href='sections/section_SEC-04.html'>SEC-04</a></li>
+<li class='secItem' data-search='sec-05'><a href='sections/section_SEC-05.html'>SEC-05</a></li>
+<li class='secItem' data-search='sec-06'><a href='sections/section_SEC-06.html'>SEC-06</a></li>
+<li class='secItem' data-search='sec-07'><a href='sections/section_SEC-07.html'>SEC-07</a></li>
+<li class='secItem' data-search='sec-08'><a href='sections/section_SEC-08.html'>SEC-08</a></li>
+<li class='secItem' data-search='sec-09'><a href='sections/section_SEC-09.html'>SEC-09</a></li>
+<li class='secItem' data-search='sec-10'><a href='sections/section_SEC-10.html'>SEC-10</a></li>
+<li class='secItem' data-search='sec-11'><a href='sections/section_SEC-11.html'>SEC-11</a></li>
+<li class='secItem' data-search='sec-12'><a href='sections/section_SEC-12.html'>SEC-12</a></li>
+<li class='secItem' data-search='sec-13'><a href='sections/section_SEC-13.html'>SEC-13</a></li>
+<li class='secItem' data-search='sec-14'><a href='sections/section_SEC-14.html'>SEC-14</a></li>
+<li class='secItem' data-search='sec-15'><a href='sections/section_SEC-15.html'>SEC-15</a></li>
+<li class='secItem' data-search='sec-16'><a href='sections/section_SEC-16.html'>SEC-16</a></li>
+<li class='secItem' data-search='sec-17'><a href='sections/section_SEC-17.html'>SEC-17</a></li>
+<li class='secItem' data-search='sec-18'><a href='sections/section_SEC-18.html'>SEC-18</a></li>
+<li class='secItem' data-search='sec-19'><a href='sections/section_SEC-19.html'>SEC-19</a></li>
+<li class='secItem' data-search='sec-20'><a href='sections/section_SEC-20.html'>SEC-20</a></li>
+<li class='secItem' data-search='sec-21'><a href='sections/section_SEC-21.html'>SEC-21</a></li>
+<li class='secItem' data-search='sec-22'><a href='sections/section_SEC-22.html'>SEC-22</a></li>
+<li class='secItem' data-search='sec-23'><a href='sections/section_SEC-23.html'>SEC-23</a></li>
+<li class='secItem' data-search='sec-24'><a href='sections/section_SEC-24.html'>SEC-24</a></li>
+<li class='secItem' data-search='sec-25'><a href='sections/section_SEC-25.html'>SEC-25</a></li>
+<li class='secItem' data-search='sec-26'><a href='sections/section_SEC-26.html'>SEC-26</a></li>
+<li class='secItem' data-search='sec-27'><a href='sections/section_SEC-27.html'>SEC-27</a></li>
+<li class='secItem' data-search='sec-28'><a href='sections/section_SEC-28.html'>SEC-28</a></li>
+<li class='secItem' data-search='sec-29'><a href='sections/section_SEC-29.html'>SEC-29</a></li>
+<li class='secItem' data-search='sec-30'><a href='sections/section_SEC-30.html'>SEC-30</a></li>
+<li class='secItem' data-search='sec-31'><a href='sections/section_SEC-31.html'>SEC-31</a></li>
+<li class='secItem' data-search='sec-32'><a href='sections/section_SEC-32.html'>SEC-32</a></li>
+<li class='secItem' data-search='sec-33'><a href='sections/section_SEC-33.html'>SEC-33</a></li>
+<li class='secItem' data-search='sec-34'><a href='sections/section_SEC-34.html'>SEC-34</a></li>
+<li class='secItem' data-search='sec-35'><a href='sections/section_SEC-35.html'>SEC-35</a></li>
+<li class='secItem' data-search='sec-36'><a href='sections/section_SEC-36.html'>SEC-36</a></li>
+<li class='secItem' data-search='sec-37'><a href='sections/section_SEC-37.html'>SEC-37</a></li>
+<li class='secItem' data-search='sec-38'><a href='sections/section_SEC-38.html'>SEC-38</a></li>
+<li class='secItem' data-search='sec-39'><a href='sections/section_SEC-39.html'>SEC-39</a></li>
+<li class='secItem' data-search='sec-40'><a href='sections/section_SEC-40.html'>SEC-40</a></li>
+<li class='secItem' data-search='sec-41'><a href='sections/section_SEC-41.html'>SEC-41</a></li>
+<li class='secItem' data-search='sec-42'><a href='sections/section_SEC-42.html'>SEC-42</a></li>
+<li class='secItem' data-search='sec-43'><a href='sections/section_SEC-43.html'>SEC-43</a></li>
+<li class='secItem' data-search='sec-44'><a href='sections/section_SEC-44.html'>SEC-44</a></li>
+<li class='secItem' data-search='sec-45'><a href='sections/section_SEC-45.html'>SEC-45</a></li>
+<li class='secItem' data-search='sec-46'><a href='sections/section_SEC-46.html'>SEC-46</a></li>
+<li class='secItem' data-search='sec-47'><a href='sections/section_SEC-47.html'>SEC-47</a></li>
+<li class='secItem' data-search='sec-48'><a href='sections/section_SEC-48.html'>SEC-48</a></li>
+<li class='secItem' data-search='sec-49'><a href='sections/section_SEC-49.html'>SEC-49</a></li>
+<li class='secItem' data-search='sec-50'><a href='sections/section_SEC-50.html'>SEC-50</a></li>
+<li class='secItem' data-search='sec-51'><a href='sections/section_SEC-51.html'>SEC-51</a></li>
+<li class='secItem' data-search='sec-52'><a href='sections/section_SEC-52.html'>SEC-52</a></li>
+<li class='secItem' data-search='sec-53'><a href='sections/section_SEC-53.html'>SEC-53</a></li>
+<li class='secItem' data-search='sec-54'><a href='sections/section_SEC-54.html'>SEC-54</a></li>
+</ul></div>
+<script>attachListFilter('secSearch', '.secItem');</script>
+</div></body></html>

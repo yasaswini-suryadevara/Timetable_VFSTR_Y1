@@ -1,0 +1,265 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Timetable Home</title>
+
+<style>
+:root{
+  --bg:#f6f8fc;
+  --card:#ffffff;
+  --stroke:#e6eaf2;
+  --text:#1b2430;
+  --muted:#5b6b7a;
+  --subject:#1d4ed8;
+  --faculty:#0f766e;
+  --room:#7c3aed;
+  --section:#b91c1c;
+  --nonclass:#b45309;
+}
+
+*{box-sizing:border-box;}
+body{
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg, var(--bg), #f2f5fb);
+  color:var(--text);
+}
+.container{max-width:1200px;margin:0 auto;padding:18px 14px 30px;}
+a{color:var(--subject); text-decoration:none;}
+a:hover{text-decoration:underline;}
+.small{font-size:12px;color:var(--muted);}
+.badge{
+  display:inline-flex; align-items:center;
+  padding:2px 10px; border:1px solid var(--stroke); border-radius:999px;
+  background:#f7f8fb; font-size:12px; color:var(--muted);
+}
+.hr{height:0.1px;background:var(--stroke);margin:14px 0;}
+.card{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:4px;
+  box-shadow: 0 10px 5px rgba(16,24,40,.06);
+}
+
+.header{
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  background: linear-gradient(135deg, #ffffff, #f6f8ff);
+  border:1px solid var(--stroke);
+  box-shadow: 0 14px 30px rgba(16,24,40,.08);
+}
+.header-logo{
+  width:188px;height:44px;flex:0 0 188px;
+  border-radius:14px;
+  background:#ffffff;
+  border:1px solid var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.header-logo img{width:188px;height:44px;display:block;}
+.header-title{font-size:18px;font-weight:800;letter-spacing:.2px;margin:0;}
+.header-sub{margin:2px 0 0 0; color:var(--muted); font-size:13px;}
+.header-lines{margin-top:8px;}
+.header-lines div{color:var(--muted); font-size:12px; line-height:1.35;}
+
+.navlinks{margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;}
+.navbtn{
+  display:inline-flex; gap:3px; align-items:center;
+  padding:3px 3px;
+  border-radius:3px;
+  border:1px solid var(--stroke);
+  background:#ffffff;
+  color:var(--text);
+  cursor:pointer;
+}
+.navbtn:hover{background:#f7f8fb; text-decoration:none;}
+.dot{width:10px;height:10px;border-radius:999px;background:var(--subject);}
+
+.searchbar{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+.searchbar input{
+  flex:1; min-width:260px;
+  padding:10px 12px;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  font-size:13px;
+  outline:none;
+  background:#fff;
+}
+.searchbar input:focus{border-color:#cbd5e1;}
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border-radius:4px;
+  border:1px solid var(--stroke);
+  background:#fff;
+}
+table{
+  border-collapse:separate;
+  border-spacing:0;
+  width:100%;
+  min-width:360px;
+  table-layout:fixed;
+}
+th,td{
+  border-bottom:1px solid var(--stroke);
+  border-right:1px solid var(--stroke);
+  padding:2px;
+  vertical-align:top;
+  font-size:12px;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+tr:last-child td{border-bottom:none;}
+th:last-child, td:last-child{border-right:none;}
+th{background:#f3f6fb;font-weight:800; position:sticky; top:0; z-index:2;}
+.day{background:#fafbfe;font-weight:700; width:72px; position:sticky; left:0; z-index:1;}
+
+.subj{font-weight:800; color:var(--subject);}
+.faculty{color:var(--faculty); font-weight:700;}
+.room{color:var(--room); font-weight:700;}
+.section-label{color:var(--section); font-weight:700;}
+.nonclass{font-weight:500; color:var(--nonclass);}
+.free{color:#94a3b8;}
+
+.faculty-list-table{min-width:520px;}
+.faculty-list-table td{font-size:13px;}
+.faculty-list-table .emp{color:var(--muted); font-weight:700; width:110px; white-space:nowrap;}
+.faculty-list-table .name{color:var(--faculty); font-weight:800;}
+.faculty-list-table a{color:inherit;}
+
+/* Room index card grid */
+.room-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap:12px;
+  margin-top:12px;
+}
+.room-card{
+  background:#ffffff;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  padding:14px 16px;
+  box-shadow: 0 2px 8px rgba(16,24,40,.05);
+  transition: box-shadow .2s, transform .2s;
+}
+.room-card:hover{
+  box-shadow: 0 6px 20px rgba(16,24,40,.12);
+  transform: translateY(-2px);
+}
+.room-card a{
+  font-size:15px;
+  font-weight:800;
+  color:var(--room);
+  text-decoration:none;
+}
+.room-card a:hover{text-decoration:underline;}
+.room-card .room-meta{font-size:11px; color:var(--muted); margin-top:4px;}
+
+@media print{
+  body{background:#fff;}
+  .navlinks,.searchbar{display:none !important;}
+  .header{box-shadow:none;}
+  .card{box-shadow:none;}
+  .table-wrap{overflow:visible; border:1px solid #ccc;}
+  table{min-width:auto;}
+  th{position:static;}
+  .day{position:static;}
+}
+</style>
+
+
+            <style>
+            .course-section { margin: 30px 0; }
+            .course-table-wrapper { display:flex; justify-content:center; margin:30px 0; }
+            .course-table {
+                width:100%; max-width:900px; background:white; border-radius:12px;
+                overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.1); border-collapse:collapse;
+            }
+            .course-table thead { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); }
+            .course-table th { padding:16px 20px; color:white; font-size:1em; text-align:left; font-weight:600; }
+            .course-table tbody tr { transition:all .2s ease; border-bottom:1px solid #f0f0f0; }
+            .course-table tbody tr:nth-child(odd)  { background:#f8f9ff; }
+            .course-table tbody tr:nth-child(even) { background:#ffffff; }
+            .course-table tbody tr:hover { background:#e8edff; transform:scale(1.01); }
+            .course-table td { padding:14px 20px; font-size:.95em; color:#333; }
+            .course-table td:first-child { font-weight:600; color:#764ba2; font-family:'Courier New',monospace; }
+            .download-section {
+                display:flex; justify-content:center; gap:25px; flex-wrap:wrap; margin:30px 0;
+            }
+            .download-box {
+                background:white; border-radius:12px; padding:25px 35px;
+                box-shadow:0 4px 15px rgba(0,0,0,0.1); transition:all .3s ease;
+                text-align:center; min-width:220px; border:2px solid transparent;
+            }
+            .download-box:nth-child(1) { border-color:#84fab0; }
+            .download-box:nth-child(2) { border-color:#ffa07a; }
+            .download-box:nth-child(3) { border-color:#a78bfa; }
+            .download-box:hover { transform:translateY(-5px); box-shadow:0 8px 25px rgba(0,0,0,0.15); }
+            .download-box h3 { color:#333; margin-bottom:15px; font-size:1.3em; }
+            .download-box a {
+                display:inline-block; padding:12px 25px;
+                background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+                color:white; text-decoration:none; border-radius:25px;
+                font-weight:600; font-size:1em; transition:all .3s ease;
+            }
+            .download-box a:hover { transform:scale(1.05); box-shadow:0 4px 15px rgba(102,126,234,.4); }
+            .icon { font-size:2.5em; margin-bottom:10px; }
+            .section-title { text-align:center; color:#333; margin:30px 0 20px 0; font-size:1.8em; font-weight:600; }
+            @media (max-width:768px) {
+                .course-table { font-size:.85em; }
+                .course-table th, .course-table td { padding:10px 12px; }
+                .download-box { min-width:180px; }
+            }
+            </style>
+            
+</head><body><div class='container'>
+
+<div class="header">
+  <div class="header-logo"><img src="file:///Users/bhanuprakash/Desktop/Timetable/VignanLogo.jpeg" alt="Logo"></div>
+  <div style="flex:1;">
+    <div class="header-title">Vignan&#x27;s Foundation for Science, Technology &amp; Research <span class="badge">Home</span></div>
+    <div class="header-sub">School of Applied Science &amp; Humanities 
+<div style="margin-top:12px; font-size:14px;">
+  <span style="color:#64748b; font-weight:600;">Author:-- </span>
+  <a href="https://dbhanuprakash233.github.io" target="_blank"
+     style="text-decoration:none; font-weight:800; color:#1d4ed8;">
+    Dr.BP
+  </a>
+</div>
+</div>
+    <div class="header-lines">
+      <div>A.Y. :2025-26    Sem: II I. B. Tech Time Table  w.e.f. 05.02.2026</div>
+    </div>
+  </div>
+</div>
+
+<div class='navlinks'>
+<a class='navbtn' href='sections_index.html'><span class='dot'></span><b>Section Timetables</b></a>
+<a class='navbtn' href='faculty_index.html'><span class='dot'></span><b>Faculty Timetables</b></a>
+<a class='navbtn' href='rooms_index.html'><span class='dot'></span><b>Room Timetables</b></a>
+</div>
+<div class='hr'></div>
+<div class='course-section'>
+<h2 class='section-title'>📚 Course Information</h2>
+<div class='course-table-wrapper'>
+<table class='course-table'>
+<thead><tr><th>Course Code</th><th>Course Name</th></tr></thead>
+<tbody>
+<tr><td>25MT105</td><td>Calculus And Ordinary Differential Equations (CAL & ODE)</td></tr>
+<tr><td>25PY101</td><td>Engineering Physics (EP)</td></tr>
+<tr><td>25ME101</td><td>Engineering Drawing (EG)</td></tr>
+<tr><td>25CS102</td><td>Problem Solving Through Python (PSTP)</td></tr>
+<tr><td>25EN104</td><td>Technical English Communication (TEC)</td></tr>
+<tr><td>25CT101</td><td>Environmental Studies (ES)</td></tr>
+<tr><td>25SA103</td><td>Physical Fitness</td></tr>
+<tr><td>25SA102</td><td>Self-Understanding And Gender Sensitization (SE&GS)</td></tr>
+<tr><td>25SS102</td><td>Indian Knowledge Systems (IKS)</td></tr>
+<tr><td>25CY101</td><td>Cyber Security (CS)</td></tr>
+</tbody></table>
+</div>
+<div class='download-section'>
+<div class='download-box'><div class='icon'>📄</div><h3>Section Master</h3><a href='sections_index_master.pdf'>Download PDF</a></div>
+<div class='download-box'><div class='icon'>📚</div><h3>Faculty Master</h3><a href='faculty_index_master.pdf'>Download PDF</a></div>
+<div class='download-box'><div class='icon'>🏫</div><h3>Room Master</h3><a href='rooms_index_master.pdf'>Download PDF</a></div>
+</div>
+</div></body></html>
